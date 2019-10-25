@@ -1,6 +1,6 @@
 package com.revosleap.mobilesasa
 
-import com.revosleap.mobilesasa.models.MSResponse
+import com.revosleap.mobilesasa.models.MobileSasaResponse
 import com.revosleap.mobilesasa.requests.APIClient
 import com.revosleap.mobilesasa.requests.APIService
 import retrofit2.Call
@@ -12,16 +12,7 @@ class MobileSasa {
     private var API_KEY: String? = null
     private var token: String? = null
     private var SENDER_ID: String? = "MOBILESASA"
-
     private var apiService: APIService? = null
-
-    private val BASE_URL = "https://account.mobilesasa.com/api/express-post?senderID="
-    //            "                . $senderId\n" +
-//            "                . \"&phone=\" . $recipient\n" +
-//            "                . \"&message=\" . $message\n" +
-//            "                . \"&api_key=\" . $apiKey\n" +
-//            "                . \"&username=\" . $username"
-    private var URL = ""
 
     constructor(userName: String, API_KEY: String) {
         this.userName = userName
@@ -54,20 +45,41 @@ class MobileSasa {
         apiService = APIClient.getAPIService()
     }
 
-    fun sendSMS(recipient: String, message: String) {
+    fun sendSMS(recipient: String, message: String): MobileSasaResponse {
+        var res: MobileSasaResponse? = null
         apiService?.sendSMS(SENDER_ID!!, recipient, message, API_KEY!!, userName!!)!!
-            .enqueue(object : Callback<MSResponse> {
-                override fun onResponse(c: Call<MSResponse>, response: Response<MSResponse>) {
-
+            .enqueue(object : Callback<MobileSasaResponse> {
+                override fun onResponse(
+                    c: Call<MobileSasaResponse>,
+                    response: Response<MobileSasaResponse>
+                ) {
+                    res = response.body()
                 }
 
-                override fun onFailure(call: Call<MSResponse>, t: Throwable) {
+                override fun onFailure(call: Call<MobileSasaResponse>, t: Throwable) {
 
                 }
             })
+        return res!!
     }
 
     fun sendMultipleSMS(recipients: List<String>, message: String) {
+        if (SENDER_ID == null) SENDER_ID = "MOBILESASA"
+        var res: MobileSasaResponse? = null
+        for (recipient in recipients) {
+            apiService?.sendSMS(SENDER_ID!!, recipient, message, API_KEY!!, userName!!)!!
+                .enqueue(object : Callback<MobileSasaResponse> {
+                    override fun onResponse(
+                        c: Call<MobileSasaResponse>,
+                        response: Response<MobileSasaResponse>
+                    ) {
+                        res = response.body()
+                    }
 
+                    override fun onFailure(call: Call<MobileSasaResponse>, t: Throwable) {
+
+                    }
+                })
+        }
     }
 }

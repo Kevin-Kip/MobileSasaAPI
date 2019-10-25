@@ -1,17 +1,17 @@
 package com.revosleap.mobilesasa.requests
 
-import com.revosleap.mobilesasa.models.MSResponse
+import com.revosleap.mobilesasa.models.MobileSasaResponse
 import retrofit2.Call
 import retrofit2.http.POST
-import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface APIService {
-    @POST("senderID={SENDER_ID}&phone={recipient}&message={message}&api_key={API_KEY}&username={userName}")
+    @POST("express-post?")
     fun sendSMS(
-        @Path("SENDER_ID") SENDER_ID: String,
-        @Path("recipient") recipient: String,
-        @Path("message") message: String,
-        @Path("API_KEY") API_KEY: String,
-        @Path("userName") userName: String
-    ): Call<MSResponse>
+        @Query("senderID") SENDER_ID: String,
+        @Query("phone") recipient: String,
+        @Query("message") message: String,
+        @Query("api_key") API_KEY: String,
+        @Query("username") userName: String
+    ): Call<MobileSasaResponse>
 }

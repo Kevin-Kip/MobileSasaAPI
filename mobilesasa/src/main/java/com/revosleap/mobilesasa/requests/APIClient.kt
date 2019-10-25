@@ -8,7 +8,7 @@ object APIClient {
 //            "                . \"&api_key=\" . $apiKey\n" +
 //            "                . \"&username=\" . $username"
 
-    const val BASE_URL = "https://account.mobilesasa.com/api/express-post?"
+    const val BASE_URL = "https://account.mobilesasa.com/api/"
     fun getAPIService(): APIService =
         RetrofitClient.getClient(baseURL = BASE_URL)!!.create(APIService::class.java)
 }
