@@ -1,5 +1,6 @@
 package com.revosleap.mobilesasa
 
+import com.revosleap.mobilesasa.models.MSResponse
 import com.revosleap.mobilesasa.requests.APIClient
 import com.revosleap.mobilesasa.requests.APIService
 import retrofit2.Call

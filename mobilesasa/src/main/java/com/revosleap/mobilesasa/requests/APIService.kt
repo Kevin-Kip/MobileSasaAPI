@@ -1,6 +1,6 @@
 package com.revosleap.mobilesasa.requests
 
-import com.revosleap.mobilesasa.MSResponse
+import com.revosleap.mobilesasa.models.MSResponse
 import retrofit2.Call
 import retrofit2.http.POST
 import retrofit2.http.Path
