@@ -1,20 +1,28 @@
 package com.revosleap.mobilesasa
 
+import android.content.Context
+import com.revosleap.mobilesasa.cache.SMSDao
+import com.revosleap.mobilesasa.cache.SMSDatabase
 import com.revosleap.mobilesasa.models.MobileSasaResponse
+import com.revosleap.mobilesasa.network.NetworkChange
 import com.revosleap.mobilesasa.requests.APIClient
 import com.revosleap.mobilesasa.requests.APIService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MobileSasa {
+class MobileSasa : NetworkChange {
     private var userName: String? = null
     private var API_KEY: String? = null
     private var token: String? = null
     private var SENDER_ID: String? = "MOBILESASA"
     private var apiService: APIService? = null
+    private var ctx: Context? = null
+    private var database:SMSDatabase? = null
+    private var smsDao:SMSDao? = null
 
-    constructor(userName: String, API_KEY: String) {
+    constructor(ctx: Context, userName: String, API_KEY: String) {
+        this.ctx = ctx
         this.userName = userName
         this.API_KEY = API_KEY
         apiService = APIClient.getAPIService()
@@ -26,14 +34,16 @@ class MobileSasa {
 //        this.token = token
 //    }
 
-    constructor(userName: String?, API_KEY: String?, SENDER_ID: String?) {
+    constructor(ctx: Context, userName: String?, API_KEY: String?, SENDER_ID: String?) {
+        this.ctx = ctx
         this.userName = userName
         this.API_KEY = API_KEY
         this.SENDER_ID = SENDER_ID
         apiService = APIClient.getAPIService()
     }
 
-    constructor(userName: String?, API_KEY: String?, token: String?, SENDER_ID: String?) {
+    constructor(ctx: Context, userName: String, API_KEY: String, token: String, SENDER_ID: String) {
+        this.ctx = ctx
         this.userName = userName
         this.API_KEY = API_KEY
         this.token = token
@@ -43,6 +53,8 @@ class MobileSasa {
 
     init {
         apiService = APIClient.getAPIService()
+        database = SMSDatabase.invoke(ctx!!)
+        smsDao = database?.smsDao()
     }
 
     fun sendSMS(recipient: String, message: String): MobileSasaResponse {
@@ -80,6 +92,14 @@ class MobileSasa {
 
                     }
                 })
+        }
+    }
+
+    override fun networkChanged(connected: Boolean) {
+        if (connected) {
+            //TODO check for cached messages and send
+        } else {
+            //TODO cache messages being sent
         }
     }
 }
