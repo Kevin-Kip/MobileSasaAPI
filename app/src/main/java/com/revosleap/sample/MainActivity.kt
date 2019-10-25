@@ -1,4 +1,4 @@
-package com.revosleap.mobilesasa
+package com.revosleap.sample
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
