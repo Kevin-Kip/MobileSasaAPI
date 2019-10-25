@@ -18,8 +18,8 @@ class MobileSasa : NetworkChange {
     private var SENDER_ID: String? = "MOBILESASA"
     private var apiService: APIService? = null
     private var ctx: Context? = null
-    private var database:SMSDatabase? = null
-    private var smsDao:SMSDao? = null
+    private var database: SMSDatabase? = null
+    private var smsDao: SMSDao? = null
 
     constructor(ctx: Context, userName: String, API_KEY: String) {
         this.ctx = ctx
@@ -53,7 +53,7 @@ class MobileSasa : NetworkChange {
 
     init {
         apiService = APIClient.getAPIService()
-        database = SMSDatabase.invoke(ctx!!)
+        database = SMSDatabase.build(ctx!!)
         smsDao = database?.smsDao()
     }
 

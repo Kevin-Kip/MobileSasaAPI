@@ -1,5 +1,7 @@
 package com.revosleap.mobilesasa.models
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.revosleap.mobilesasa.utils.Commons
 
 @Entity(tableName = Commons.DB_NAME)

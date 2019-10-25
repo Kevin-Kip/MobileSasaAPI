@@ -1,6 +1,9 @@
 package com.revosleap.mobilesasa.cache
 
 import android.content.Context
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
 import com.revosleap.mobilesasa.models.SMS
 import com.revosleap.mobilesasa.utils.Commons
 
@@ -10,12 +13,15 @@ abstract class SMSDatabase : RoomDatabase() {
 
     companion object {
         private var db: SMSDatabase? = null
-        operator fun invoke(context: Context) = db ?: synchronized(LOCK) {
-            db ?: build(context).also { db = it }
-        }
 
-        private fun build(context: Context) =
-            Room.databaseBuilder(context, SMS::class.java, Commons.DB_NAME)
-                .build()
+        fun build(context: Context?): SMSDatabase?{
+            if (db == null){
+                synchronized(SMSDatabase::class){
+                    db = Room.databaseBuilder(context!!, SMSDatabase::class.java, Commons.DB_NAME)
+                        .build()
+                }
+            }
+            return db!!
+        }
     }
 }

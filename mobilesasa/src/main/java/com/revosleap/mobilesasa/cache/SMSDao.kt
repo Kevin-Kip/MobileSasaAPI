@@ -1,5 +1,9 @@
 package com.revosleap.mobilesasa.cache
 
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.Query
 import com.revosleap.mobilesasa.models.SMS
 import com.revosleap.mobilesasa.utils.Commons
 
