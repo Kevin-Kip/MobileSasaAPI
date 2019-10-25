@@ -2,6 +2,9 @@ package com.revosleap.mobilesasa
 
 import com.revosleap.mobilesasa.requests.APIClient
 import com.revosleap.mobilesasa.requests.APIService
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class MobileSasa {
     private var userName: String? = null
@@ -46,12 +49,21 @@ class MobileSasa {
         apiService = APIClient.getAPIService()
     }
 
-    fun prepareURL(){
-
+    init {
+        apiService = APIClient.getAPIService()
     }
 
     fun sendSMS(recipient: String, message: String) {
-        apiService?.sendSMS()
+        apiService?.sendSMS(SENDER_ID!!, recipient, message, API_KEY!!, userName!!)!!
+            .enqueue(object : Callback<MSResponse> {
+                override fun onResponse(c: Call<MSResponse>, response: Response<MSResponse>) {
+
+                }
+
+                override fun onFailure(call: Call<MSResponse>, t: Throwable) {
+
+                }
+            })
     }
 
     fun sendMultipleSMS(recipients: List<String>, message: String) {

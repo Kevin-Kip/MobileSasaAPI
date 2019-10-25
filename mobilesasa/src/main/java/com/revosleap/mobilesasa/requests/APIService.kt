@@ -1,6 +1,6 @@
 package com.revosleap.mobilesasa.requests
 
-import com.revosleap.mobilesasa.MobileSasaResponse
+import com.revosleap.mobilesasa.MSResponse
 import retrofit2.Call
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -13,5 +13,5 @@ interface APIService {
         @Path("message") message: String,
         @Path("API_KEY") API_KEY: String,
         @Path("userName") userName: String
-    ): Call<MobileSasaResponse>
+    ): Call<MSResponse>
 }
