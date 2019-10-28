@@ -14,6 +14,7 @@ import org.jetbrains.anko.runOnUiThread
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.microedition.khronos.opengles.GL
 
 class MobileSasa : NetworkChange {
     private var userName: String? = null
@@ -123,6 +124,7 @@ class MobileSasa : NetworkChange {
                     ) {
                         res.add(response.body()!!)
                         recipientList.remove(s.recipient!!)
+                        GlobalScope.launch { smsDao?.deleteOne(s) }
                     }
 
                     override fun onFailure(call: Call<MobileSasaResponse>, t: Throwable) {
