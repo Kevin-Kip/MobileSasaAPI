@@ -25,6 +25,7 @@ class MobileSasa : NetworkChange {
     private var database: SMSDatabase? = null
     private var smsDao: SMSDao? = null
     private val recipientList = mutableListOf<String>()
+    private var currentMessage = ""
 
     constructor(ctx: Context, userName: String, API_KEY: String) {
         this.ctx = ctx
@@ -63,7 +64,10 @@ class MobileSasa : NetworkChange {
     }
 
     fun sendSMS(recipient: String, message: String): MobileSasaResponse {
+        if (SENDER_ID == null) SENDER_ID = "MOBILESASA"
         var res: MobileSasaResponse? = null
+        recipientList.add(recipient)
+        currentMessage = message
         apiService?.sendSMS(SENDER_ID!!, recipient, message, API_KEY!!, userName!!)!!
             .enqueue(object : Callback<MobileSasaResponse> {
                 override fun onResponse(
@@ -71,6 +75,7 @@ class MobileSasa : NetworkChange {
                     response: Response<MobileSasaResponse>
                 ) {
                     res = response.body()
+                    recipientList.remove(recipient)
                 }
 
                 override fun onFailure(call: Call<MobileSasaResponse>, t: Throwable) {
@@ -82,6 +87,8 @@ class MobileSasa : NetworkChange {
 
     fun sendSMS(recipients: List<String>, message: String): MutableList<MobileSasaResponse> {
         if (SENDER_ID == null) SENDER_ID = "MOBILESASA"
+        recipientList.addAll(recipients)
+        currentMessage = message
         val res = mutableListOf<MobileSasaResponse>()
         for (recipient in recipients) {
             apiService?.sendSMS(SENDER_ID!!, recipient, message, API_KEY!!, userName!!)!!
@@ -91,6 +98,7 @@ class MobileSasa : NetworkChange {
                         response: Response<MobileSasaResponse>
                     ) {
                         res.add(response.body()!!)
+                        recipientList.remove(recipient)
                     }
 
                     override fun onFailure(call: Call<MobileSasaResponse>, t: Throwable) {
@@ -105,6 +113,8 @@ class MobileSasa : NetworkChange {
         if (SENDER_ID == null) SENDER_ID = "MOBILESASA"
         val res = mutableListOf<MobileSasaResponse>()
         for (s in caches) {
+            recipientList.add(s.recipient!!)
+            currentMessage = s.message!!
             apiService?.sendSMS(SENDER_ID!!, s.recipient!!, s.message!!, API_KEY!!, userName!!)!!
                 .enqueue(object : Callback<MobileSasaResponse> {
                     override fun onResponse(
@@ -112,6 +122,7 @@ class MobileSasa : NetworkChange {
                         response: Response<MobileSasaResponse>
                     ) {
                         res.add(response.body()!!)
+                        recipientList.remove(s.recipient!!)
                     }
 
                     override fun onFailure(call: Call<MobileSasaResponse>, t: Throwable) {
@@ -136,6 +147,11 @@ class MobileSasa : NetworkChange {
     }
 
     private fun cacheSMS() {
-
+        if (recipientList.isNotEmpty()) {
+            for (recipient in recipientList) {
+                val sms = SMS(recipient = recipient, message = currentMessage)
+                GlobalScope.launch { smsDao?.insert(sms) }
+            }
+        }
     }
 }
