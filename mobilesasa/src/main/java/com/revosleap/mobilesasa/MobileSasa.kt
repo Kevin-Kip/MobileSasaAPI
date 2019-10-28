@@ -1,6 +1,7 @@
 package com.revosleap.mobilesasa
 
 import android.content.Context
+import android.os.CountDownTimer
 import com.revosleap.mobilesasa.cache.SMSDao
 import com.revosleap.mobilesasa.cache.SMSDatabase
 import com.revosleap.mobilesasa.models.MobileSasaResponse
@@ -164,7 +165,12 @@ class MobileSasa : NetworkChange {
 
     private fun getCache() {
         if (caching) {
-
+            object : CountDownTimer(5000, 1000) {
+                override fun onTick(p0: Long) {}
+                override fun onFinish() {
+                    getCache()
+                }
+            }
         } else {
             var cachedSMS: MutableList<SMS>
             GlobalScope.launch {
