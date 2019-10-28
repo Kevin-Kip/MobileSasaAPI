@@ -170,7 +170,7 @@ class MobileSasa : NetworkChange {
                 override fun onFinish() {
                     getCache()
                 }
-            }
+            }.start()
         } else {
             var cachedSMS: MutableList<SMS>
             GlobalScope.launch {
